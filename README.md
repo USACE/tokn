@@ -10,10 +10,10 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/electron/electron-quick-start
+git clone https://github.com/USACE/tokn.git
 # Go into the repository
-cd electron-quick-start
-# Install dependencies
+cd tokn
+# Install dependencies, make sure dev dependencies get installed
 npm install
 # Run the app
 npm start
@@ -27,6 +27,10 @@ Note: If you're using Linux Bash for Windows, [see this guide](https://www.howto
 - [electronjs.org/community#boilerplates](https://electronjs.org/community#boilerplates) - sample starter apps created by the community
 - [electron/electron-quick-start](https://github.com/electron/electron-quick-start) - a very basic starter Electron app
 - [hokein/electron-sample-apps](https://github.com/hokein/electron-sample-apps) - small demo apps for the various Electron APIs
+
+## Packaging for distribution
+
+`npm run make`
 
 ## License
 

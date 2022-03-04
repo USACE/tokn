@@ -194,8 +194,11 @@ const btn = document.getElementById("login");
 btn.addEventListener("click", login);
 
 // Async message handler
-ipcRenderer.on("asynchronous-reply", (event, arg) => {
-  console.log("reply from main:", arg);
+ipcRenderer.on("asynchronous-reply", (event, msg) => {
+  if(msg.status === 200){
+    btn.innerText = `Logged in as ${msg.username}`
+    // window.setTimeout(window.close, 500)
+  }
 });
 
 // Async message sender

@@ -59,7 +59,7 @@ class AuthManager {
     });
 
     this.win.loadFile("index.html");
-    this.win.webContents.openDevTools();
+    // this.win.webContents.openDevTools();
 
     this.win.on("minimize", (event) => {
       event.preventDefault();
@@ -84,7 +84,7 @@ class AuthManager {
     this.updateContextMenu();
     this.updateTrayIcon();
     // reply to the ui that we're good
-    event.sender.send("asynchronous-reply", `200: Logged In`);
+    event.sender.send("asynchronous-reply", {status:200,username:this.username});
   }
 
   requestListener(req, res) {
