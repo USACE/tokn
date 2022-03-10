@@ -88,7 +88,7 @@ class AuthManager {
 
     this.loggedOutIcon = config.loggedOutIcon;
     this.loggedInIcon = nativeImage.createFromPath(
-      path.join(__dirname, 'img', 'shield-check-green.png')
+      path.join(__dirname, 'img', 'coin-16x16.png')
     );
 
     this.ipc = ipcMain;
@@ -237,7 +237,7 @@ class AuthManager {
 app.whenReady().then(() => {
   const auth = new AuthManager({
     loggedOutIcon: nativeImage.createFromPath(
-      path.join(__dirname, 'img', 'shield-need-key.png')
+      path.join(__dirname, 'img', 'coin-16x16-inactive.png')
     ),
   });
   auth.startup();
