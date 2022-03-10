@@ -10,7 +10,8 @@
   },
   "repository": "https://github.com/usace/tokn",
   "keywords": [
-    "USACE","Auth"
+    "USACE",
+    "Auth"
   ],
   "author": "willbreitkreutz",
   "license": "CC0-1.0",
@@ -28,12 +29,20 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "img/coin.ico",
+        "win32metadata": {
+          "ProductName": "tokn",
+          "CompanyName": "USACE"
+        }
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "electron_quick_start"
+            "name": "tokn",
+            "setupIcon": "img/coin.ico",
+            "loadingGif": "img/loading.gif"
           }
         },
         {
