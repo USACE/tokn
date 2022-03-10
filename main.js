@@ -5,11 +5,9 @@ const {
   Menu,
   nativeImage,
   ipcMain,
-} = require("electron");
-const http = require("http");
+} = require('electron');
+const http = require('http');
 const path = require('path');
-
-
 
 // https://github.com/electron/windows-installer/blob/0336cc646af849f125979ba623efdf5440852c4e/README.md#handling-squirrel-events
 // this should be placed at top of main.js to handle setup events quickly
@@ -36,7 +34,7 @@ function handleSquirrelEvent() {
 
     try {
       spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
-    } catch (error) { }
+    } catch (error) {}
 
     return spawnedProcess;
   };
@@ -78,7 +76,7 @@ function handleSquirrelEvent() {
       app.quit();
       return true;
   }
-};
+}
 
 class AuthManager {
   constructor(config) {
@@ -89,7 +87,9 @@ class AuthManager {
     this.username = null;
 
     this.loggedOutIcon = config.loggedOutIcon;
-    this.loggedInIcon = nativeImage.createFromPath(path.join(__dirname, "img", "shield-check-green.png"));
+    this.loggedInIcon = nativeImage.createFromPath(
+      path.join(__dirname, 'img', 'shield-check-green.png')
+    );
 
     this.ipc = ipcMain;
 
@@ -109,13 +109,13 @@ class AuthManager {
   createContextMenu() {
     if (this.token) {
       return Menu.buildFromTemplate([
-        { label: `Logged in as: ${this.username}` },
-        { label: "Quit", click: this.quit },
+        { label: `Logged in as: ${this.username}`, click: this.createWindow },
+        { label: 'Quit', click: this.quit },
       ]);
     } else {
       return Menu.buildFromTemplate([
-        { label: "Login", click: this.createWindow },
-        { label: "Quit", click: this.quit },
+        { label: 'Login', click: this.createWindow },
+        { label: 'Quit', click: this.quit },
       ]);
     }
   }
@@ -135,25 +135,42 @@ class AuthManager {
       },
     });
 
-    this.win.loadFile("index.html");
+    this.win.loadFile('index.html');
     // this.win.webContents.openDevTools();
 
-    this.win.on("minimize", (event) => {
+    this.win.on('minimize', (event) => {
       event.preventDefault();
       this.win.hide();
     });
 
-    this.win.on("activate", (event) => {
+    this.win.on('activate', (event) => {
       event.preventDefault();
-      this.win.show();
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+      } else {
+        this.win.show();
+      }
     });
 
-    this.win.on("close", (event) => {
+    this.win.on('close', (event) => {
       if (!app.isQuiting) {
         event.preventDefault();
         this.win.hide();
       } else {
-        console.log("quitting");
+        console.log('quitting');
+      }
+
+      return false;
+    });
+
+    // Quit when all windows are closed, except on macOS. There, it's common
+    // for applications and their menu bar to stay active until the user quits
+    // explicitly with Cmd + Q.
+    this.win.on('window-all-closed', (event) => {
+      if (process.platform !== 'darwin') {
+        app.quit();
       }
 
       return false;
@@ -166,7 +183,10 @@ class AuthManager {
     this.updateContextMenu();
     this.updateTrayIcon();
     // reply to the ui that we're good
-    event.sender.send("asynchronous-reply", { status: 200, username: this.username });
+    event.sender.send('asynchronous-reply', {
+      status: 200,
+      username: this.username,
+    });
   }
 
   requestListener(req, res) {
@@ -175,7 +195,7 @@ class AuthManager {
       res.end(this.token);
     } else {
       res.writeHead(404);
-      res.end("");
+      res.end('');
     }
   }
 
@@ -186,13 +206,13 @@ class AuthManager {
 
   startup() {
     if (!app.requestSingleInstanceLock()) {
-      this.quit()
+      this.quit();
     }
     this.tray = new Tray(this.loggedOutIcon);
     this.updateContextMenu();
     this.startHttpServer();
-    this.ipc.on("asynchronous-message", this.handleIpcMessage);
-    this.createWindow()
+    this.ipc.on('asynchronous-message', this.handleIpcMessage);
+    this.createWindow();
   }
 
   quit() {
@@ -216,7 +236,9 @@ class AuthManager {
 
 app.whenReady().then(() => {
   const auth = new AuthManager({
-    loggedOutIcon: nativeImage.createFromPath(path.join(__dirname, "img", "shield-need-key.png")),
+    loggedOutIcon: nativeImage.createFromPath(
+      path.join(__dirname, 'img', 'shield-need-key.png')
+    ),
   });
   auth.startup();
 });
