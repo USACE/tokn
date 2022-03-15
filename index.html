@@ -3,21 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <title>TOKN</title>
-    <link rel="stylesheet" href="pure.min.css">
+    <link rel="stylesheet" href="pure.min.css" />
   </head>
-  <body>
-    <div style="margin:10px;">
-      <h2>Login to CWBI services</h2>
+  <body style="background-color: #eee">
+    <h2 style="background-color: #ccc; padding: 10px; color: #2b2b2b">
+      Login to CWBI services
+    </h2>
+    <div style="margin: 10px">
       <div>
         <h3>Cumulus</h3>
-        <button id="login">Login</button>
-        <p>After logging in you can close this window and you will stay logged in until you quit from the application tray.
+        <button id="login" class="pure-button pure-button-primary">
+          Login
+        </button>
+        <p>
+          After logging in you can close this window and you will stay logged in
+          until you quit from the application tray.
+        </p>
       </div>
     </div>
 
     <script>
       // You can also require other files to run in this process
-      require("./renderer.js");
+      require('./renderer.js');
     </script>
   </body>
 </html>
