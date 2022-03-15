@@ -209,6 +209,7 @@ class AuthManager {
       this.quit();
     }
     this.tray = new Tray(this.loggedOutIcon);
+    this.tray.setToolTip('tokn - CWBI Auth (Logged Out)');
     this.updateContextMenu();
     this.startHttpServer();
     this.ipc.on('asynchronous-message', this.handleIpcMessage);
@@ -230,6 +231,7 @@ class AuthManager {
   updateTrayIcon() {
     if (this.token) {
       this.tray.setImage(this.loggedInIcon);
+      this.tray.setToolTip('tokn - CWBI Auth (Logged In)');
     }
   }
 }
