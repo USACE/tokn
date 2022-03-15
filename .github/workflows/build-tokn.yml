@@ -1,0 +1,22 @@
+name: Build Tokn
+
+on:
+    # branches:
+    #   # - develop
+    #   - stable
+  workflow_dispatch:
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Install Node.js
+        uses: actions/setup-node@v1j
+        with:
+            node-version: '14'
+      
+      - run: npm install
+      - run: npm package
+      
