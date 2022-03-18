@@ -136,7 +136,7 @@ class AuthManager {
     });
 
     this.win.loadFile('index.html');
-    // this.win.webContents.openDevTools();
+    //this.win.webContents.openDevTools();
 
     this.win.on('minimize', (event) => {
       event.preventDefault();
@@ -148,7 +148,7 @@ class AuthManager {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
       if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
+        this.createWindow();
       } else {
         this.win.show();
       }
@@ -209,11 +209,22 @@ class AuthManager {
       this.quit();
     }
     this.tray = new Tray(this.loggedOutIcon);
-    this.tray.setToolTip('tokn - CWBI Auth (Logged Out)');
-    this.updateContextMenu();
+    //this.tray.setToolTip('tokn - CWBI Auth (Logged Out)');
+    //this.updateContextMenu();
+    this.updateTrayIcon();
     this.startHttpServer();
     this.ipc.on('asynchronous-message', this.handleIpcMessage);
     this.createWindow();
+    this.ipc.on('error', () => {
+      //bring app window to foreground
+      this.createWindow();
+      // refresh app window - login will be presented
+      if (this.win) {
+        this.win.reload();
+        this.token = null;
+        this.updateTrayIcon();
+      }
+    });
   }
 
   quit() {
@@ -232,7 +243,11 @@ class AuthManager {
     if (this.token) {
       this.tray.setImage(this.loggedInIcon);
       this.tray.setToolTip('tokn - CWBI Auth (Logged In)');
+    } else {
+      this.tray.setImage(this.loggedOutIcon);
+      this.tray.setToolTip('tokn - CWBI Auth (Logged Out)');
     }
+    this.updateContextMenu();
   }
 }
 
