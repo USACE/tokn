@@ -4,7 +4,7 @@
 // `nodeIntegration` is turned off. Use `preload.js` to
 // selectively enable features needed in the rendering
 // process.
-const { ipcRenderer } = require("electron");
+const { ipcRenderer } = require('electron');
 const urlencodeFormData = (fd) => new URLSearchParams([...fd]);
 
 class Keycloak {
@@ -47,8 +47,8 @@ class Keycloak {
 
   checkForSession() {
     const urlParams = new URLSearchParams(window.location.search);
-    this.code = urlParams.get("code");
-    this.session_state = urlParams.get("session_state");
+    this.code = urlParams.get('code');
+    this.session_state = urlParams.get('session_state');
     if (this.code && this.session_state) {
       this.codeFlowAuth(this.authcallback);
       window.history.pushState(null, null, document.location.pathname);
@@ -57,8 +57,8 @@ class Keycloak {
 
   fetchToken(formData) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", `${this.keycloakUrl}/token`, true);
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xhr.open('POST', `${this.keycloakUrl}/token`, true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     let self = this;
     let resp = null;
     xhr.onload = function () {
@@ -98,11 +98,16 @@ class Keycloak {
       }
     };
     xhr.onerror = function () {
+      //send error back to main.js
+      ipcRenderer.send('error', {
+        msg: 'ERR_BAD_SSL_CLIENT_AUTH_CERT',
+      });
+
       if (xhr.responseText) {
         self.errCallback(JSON.parse(xhr.responseText));
       } else {
         self.errCallback({
-          error: "Unable to fetch the token due to a Network Error",
+          error: 'Unable to fetch the token due to a Network Error',
         });
       }
     };
@@ -110,41 +115,41 @@ class Keycloak {
   }
 
   codeFlowAuth() {
-    console.log("fetching token");
+    console.log('fetching token');
     var data = new FormData();
-    data.append("code", this.code);
-    data.append("grant_type", "authorization_code");
-    data.append("client_id", this.config.client);
-    data.append("redirect_uri", this.config.redirectUrl);
+    data.append('code', this.code);
+    data.append('grant_type', 'authorization_code');
+    data.append('client_id', this.config.client);
+    data.append('redirect_uri', this.config.redirectUrl);
     this.fetchToken(data);
   }
 
   refresh(refreshToken) {
-    console.log("refreshing token");
+    console.log('refreshing token');
     var data = new FormData();
-    data.append("refresh_token", refreshToken);
-    data.append("grant_type", "refresh_token");
-    data.append("client_id", this.config.client);
+    data.append('refresh_token', refreshToken);
+    data.append('grant_type', 'refresh_token');
+    data.append('client_id', this.config.client);
     this.fetchToken(data);
   }
 
   directGrantAuthenticate(user, pass) {
     var data = new FormData();
-    data.append("grant_type", "password");
-    data.append("client_id", this.config.client);
-    data.append("scope", "openid profile");
-    data.append("username", user);
-    data.append("password", pass);
+    data.append('grant_type', 'password');
+    data.append('client_id', this.config.client);
+    data.append('scope', 'openid profile');
+    data.append('username', user);
+    data.append('password', pass);
     this.fetchToken(data);
   }
 
   directGrantX509Authenticate() {
     var data = new FormData();
-    data.append("grant_type", "password");
-    data.append("client_id", this.config.client);
-    data.append("scope", "openid profile");
-    data.append("username", "");
-    data.append("password", "");
+    data.append('grant_type', 'password');
+    data.append('client_id', this.config.client);
+    data.append('scope', 'openid profile');
+    data.append('username', '');
+    data.append('password', '');
     this.fetchToken(data);
   }
 
@@ -158,28 +163,28 @@ class Keycloak {
 }
 
 const tokenToObject = function (token) {
-  let base64Url = token.split(".")[1];
-  let base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+  let base64Url = token.split('.')[1];
+  let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   let jsonPayload = decodeURIComponent(
     atob(base64)
-      .split("")
+      .split('')
       .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       })
-      .join("")
+      .join('')
   );
 
   return JSON.parse(jsonPayload);
 };
 
 const auth = new Keycloak({
-  keycloakUrl: "https://develop-auth.corps.cloud/auth/",
-  realm: "water",
-  client: "cumulus",
+  keycloakUrl: 'https://auth.corps.cloud/auth/',
+  realm: 'water',
+  client: 'cumulus',
   onAuthenticate: () => {
     const token = auth.getAccessToken();
     const tokenDigest = tokenToObject(token);
-    ipcRenderer.send("asynchronous-message", {
+    ipcRenderer.send('asynchronous-message', {
       username: tokenDigest.preferred_username,
       token: token,
     });
@@ -190,18 +195,19 @@ function login() {
   auth.directGrantX509Authenticate();
 }
 
-const btn = document.getElementById("login");
-btn.addEventListener("click", login);
+const btn = document.getElementById('login');
+btn.addEventListener('click', login);
 
 // Async message handler
-ipcRenderer.on("asynchronous-reply", (event, msg) => {
-  if(msg.status === 200){
-    btn.innerText = `Logged in as ${msg.username}`
+ipcRenderer.on('asynchronous-reply', (event, msg) => {
+  if (msg.status === 200) {
+    btn.innerText = `Logged in as ${msg.username}`;
+    btn.style.backgroundColor = 'green';
     // window.setTimeout(window.close, 500)
   }
 });
 
 // Async message sender
 window.sendMsg = (msg) => {
-  ipcRenderer.send("asynchronous-message", msg);
+  ipcRenderer.send('asynchronous-message', msg);
 };
