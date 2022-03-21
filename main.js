@@ -34,7 +34,7 @@ function handleSquirrelEvent() {
 
     try {
       spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
-    } catch (error) {}
+    } catch (error) { }
 
     return spawnedProcess;
   };
@@ -209,21 +209,16 @@ class AuthManager {
       this.quit();
     }
     this.tray = new Tray(this.loggedOutIcon);
-    //this.tray.setToolTip('tokn - CWBI Auth (Logged Out)');
     //this.updateContextMenu();
     this.updateTrayIcon();
     this.startHttpServer();
     this.ipc.on('asynchronous-message', this.handleIpcMessage);
     this.createWindow();
     this.ipc.on('error', () => {
-      //bring app window to foreground
-      this.createWindow();
-      // refresh app window - login will be presented
-      if (this.win) {
-        this.win.reload();
-        this.token = null;
-        this.updateTrayIcon();
-      }
+      // this will bring the app window to the foreground
+      // and login will be preseted to user
+      app.relaunch()
+      app.exit()
     });
   }
 

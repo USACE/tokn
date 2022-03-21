@@ -35,13 +35,10 @@ class Keycloak {
   }
 
   authenticate() {
-    const url = `${this.config.keycloakUrl}/realms/${
-      this.config.realm
-    }/protocol/openid-connect/auth?response_type=code&client_id=${
-      this.config.client
-    }&scope=openid&redirect_uri=${
-      this.config.redirectUrl
-    }&nocache=${new Date().getTime()}`;
+    const url = `${this.config.keycloakUrl}/realms/${this.config.realm
+      }/protocol/openid-connect/auth?response_type=code&client_id=${this.config.client
+      }&scope=openid&redirect_uri=${this.config.redirectUrl
+      }&nocache=${new Date().getTime()}`;
     window.location.href = url;
   }
 
@@ -56,12 +53,22 @@ class Keycloak {
   }
 
   fetchToken(formData) {
+    console.log('setting fetchToken timeout');
+    let timer = setTimeout(function () {
+      console.log('fetchToken timeout');
+      //send error back to main.js
+      ipcRenderer.send('error', {
+        msg: 'auth_timeout',
+      });
+    }, 600000);
     var xhr = new XMLHttpRequest();
     xhr.open('POST', `${this.keycloakUrl}/token`, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     let self = this;
     let resp = null;
     xhr.onload = function () {
+      clearTimeout(timer);
+      console.log('clearing fetchToken timeout');
       switch (xhr.status) {
         case 400:
           self.accessToken = null;
@@ -98,10 +105,6 @@ class Keycloak {
       }
     };
     xhr.onerror = function () {
-      //send error back to main.js
-      ipcRenderer.send('error', {
-        msg: 'ERR_BAD_SSL_CLIENT_AUTH_CERT',
-      });
 
       if (xhr.responseText) {
         self.errCallback(JSON.parse(xhr.responseText));
