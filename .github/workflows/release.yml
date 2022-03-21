@@ -7,8 +7,7 @@ on:
     tags:
       - 'v*'
   release:
-    types:
-      - created
+    types: [created, published]
   workflow_dispatch:
 
 jobs:
