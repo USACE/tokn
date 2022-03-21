@@ -105,7 +105,13 @@ class Keycloak {
       }
     };
     xhr.onerror = function () {
-
+      // this can happen if the server is not reachable
+      // or if the user was prompted for a PIN while the CAC
+      // was removed and they click cancel on the cert dialog window
+      //send error back to main.js
+      ipcRenderer.send('error', {
+        msg: 'auth_timeout',
+      });
       if (xhr.responseText) {
         self.errCallback(JSON.parse(xhr.responseText));
       } else {
