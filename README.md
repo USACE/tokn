@@ -4,6 +4,10 @@
 
 This is a little helper app designed to run in the application try letting users log into CWBI authentication services so that tokens can be used by local scripts to access authenticated web APIs.
 
+## User Setup
+
+[User Setup Guide](docs/README.md)
+
 ## Development
 
 To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
@@ -22,6 +26,7 @@ npm start
 Note: If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
 
 ## Release Builds
+
 ```
 npm version [major|minor|patch]
 git push --follow-tags
