@@ -41,7 +41,7 @@ function handleSquirrelEvent() {
 
     try {
       spawnedProcess = ChildProcess.spawn(command, args, { detached: true });
-    } catch (error) {}
+    } catch (error) { }
 
     return spawnedProcess;
   };
@@ -136,9 +136,11 @@ class AuthManager {
     this.win = new BrowserWindow({
       width: 600,
       height: 400,
+      autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
+        devTools: false,
       },
     });
 
