@@ -9,6 +9,13 @@ const {
 const http = require('http');
 const path = require('path');
 
+// Only auto-update on Windows, Mac requires signed app
+if (process.platform === 'win32') {
+  require('update-electron-app')({
+    updateInterval: '1 hour',
+  });
+}
+
 // https://github.com/electron/windows-installer/blob/0336cc646af849f125979ba623efdf5440852c4e/README.md#handling-squirrel-events
 // this should be placed at top of main.js to handle setup events quickly
 if (handleSquirrelEvent()) {
@@ -129,9 +136,11 @@ class AuthManager {
     this.win = new BrowserWindow({
       width: 600,
       height: 400,
+      autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false,
+        devTools: false,
       },
     });
 
@@ -217,8 +226,8 @@ class AuthManager {
     this.ipc.on('error', () => {
       // this will bring the app window to the foreground
       // and login will be preseted to user
-      app.relaunch()
-      app.exit()
+      app.relaunch();
+      app.exit();
     });
   }
 

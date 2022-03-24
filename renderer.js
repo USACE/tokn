@@ -6,6 +6,8 @@
 // process.
 const { ipcRenderer } = require('electron');
 const urlencodeFormData = (fd) => new URLSearchParams([...fd]);
+const app_version = require('./package.json').version;
+console.log(app_version);
 
 class Keycloak {
   constructor(config) {
@@ -35,10 +37,13 @@ class Keycloak {
   }
 
   authenticate() {
-    const url = `${this.config.keycloakUrl}/realms/${this.config.realm
-      }/protocol/openid-connect/auth?response_type=code&client_id=${this.config.client
-      }&scope=openid&redirect_uri=${this.config.redirectUrl
-      }&nocache=${new Date().getTime()}`;
+    const url = `${this.config.keycloakUrl}/realms/${
+      this.config.realm
+    }/protocol/openid-connect/auth?response_type=code&client_id=${
+      this.config.client
+    }&scope=openid&redirect_uri=${
+      this.config.redirectUrl
+    }&nocache=${new Date().getTime()}`;
     window.location.href = url;
   }
 
@@ -206,6 +211,8 @@ function login() {
 
 const btn = document.getElementById('login');
 btn.addEventListener('click', login);
+const version = document.getElementById('version');
+version.innerText = `v${app_version}`;
 
 // Async message handler
 ipcRenderer.on('asynchronous-reply', (event, msg) => {
