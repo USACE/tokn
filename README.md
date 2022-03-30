@@ -2,7 +2,7 @@
 
 **Enable CAC or Login.gov based authentication for local scripts for API access**
 
-This is a little helper app designed to run in the application try letting users log into CWBI authentication services so that tokens can be used by local scripts to access authenticated web APIs.
+This is a little helper app designed to run in the application tray letting users log into CWBI authentication services so that tokens can be used by local scripts to access authenticated web APIs.
 
 ## User Setup
 
