@@ -22,4 +22,4 @@ Click Login (may be prompted for CAC PIN). The login button should turn green wi
 
 You can then close the window.  Tokn will remain running in the system tray.
 
-If you need to start the app after quiting or after a reboot, use the shortcut on the desktop.
+If you need to start the app after quiting or after a reboot, **use the shortcut on the desktop**.
