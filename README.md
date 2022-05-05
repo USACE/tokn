@@ -8,6 +8,10 @@ This is a little helper app designed to run in the application tray letting user
 
 [User Setup Guide](docs/README.md)
 
+## Troubleshooting
+
+[Troubleshooting Tokn Problems](docs/troubleshooting.md)
+
 ## Development
 
 To clone and run this repository you'll need [Git](https://git-scm.com) and [Node.js](https://nodejs.org/en/download/) (which comes with [npm](http://npmjs.com)) installed on your computer. From your command line:
