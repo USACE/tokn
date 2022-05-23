@@ -1,6 +1,6 @@
 {
   "name": "tokn",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Enable CAC or Login.gov based authentication for local scripts for API access",
   "main": "main.js",
   "scripts": {
